@@ -10,7 +10,7 @@
 					</v-list-item-avatar>
 
 					<v-list-item-content>
-						<v-list-item-title class="title">OPQ</v-list-item-title>
+						<v-list-item-title class="title">Avilla dashboard</v-list-item-title>
 						<v-list-item-subtitle>panel</v-list-item-subtitle>
 					</v-list-item-content>
 				</v-list-item>
