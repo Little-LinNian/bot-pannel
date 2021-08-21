@@ -120,6 +120,7 @@ interface SayaModule {
 @Component<Plugins>({})
 export default class Plugins extends Vue {
 	[x: string]: any
+	token: any = localStorage.getItem('token')
 	selectedItem = -1
 	modules: SayaModule[] = []
 	UninstallModules: SayaModule[] = []
@@ -144,6 +145,11 @@ export default class Plugins extends Vue {
 		xmlhttpinstall.open('GET', config.api + '/saya/list', true)
 		xmlhttpinstall.onreadystatechange = () => {
 			if (xmlhttpinstall.readyState === 4 && xmlhttpinstall.status === 200) {
+				var data = JSON.parse(xmlhttpinstall.responseText)
+				if (data["message"] == "Invalid Token")	{
+					alert("Token无效，请重新登录")
+					window.location.href = "/"
+				}
 				var modules = JSON.parse(xmlhttpinstall.responseText)['modules']
 				modules.forEach((mod: SayaModule) => {
 					this.modules.push(mod)
@@ -165,9 +171,18 @@ export default class Plugins extends Vue {
 	}
 	async UninstallModule(name: string): Promise<void> {
 		var xmlhttp = new XMLHttpRequest()
-		xmlhttp.open('GET', config.api + '/saya/uninstall?name=' + name, true)
+		xmlhttp.open(
+			'GET',
+			config.api + '/saya/uninstall?name=' + name + '&token=' + this.token,
+			true
+		)
 		xmlhttp.onreadystatechange = () => {
 			if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+				var data = JSON.parse(xmlhttp.responseText)
+				if (data["message"] == "Invalid Token")	{
+					alert("Token无效，请重新登录")
+					window.location.href = "/"
+				}
 				alert(name + ' 已卸载')
 				location.reload()
 			}
@@ -176,7 +191,11 @@ export default class Plugins extends Vue {
 	}
 	async InstallModule(name: string): Promise<void> {
 		var xmlhttp = new XMLHttpRequest()
-		xmlhttp.open('GET', config.api + '/saya/install?name=' + name, true)
+		xmlhttp.open(
+			'GET',
+			config.api + '/saya/install?name=' + name + '&token=' + this.token,
+			true
+		)
 		xmlhttp.onreadystatechange = () => {
 			if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
 				alert(name + ' 已安装')
@@ -189,9 +208,14 @@ export default class Plugins extends Vue {
 
 	async GetOneModule(name: string, k: number): Promise<void> {
 		var xmlhttp = new XMLHttpRequest()
-		xmlhttp.open('GET', config.api + '/getcode?name=' + name, true)
+		xmlhttp.open('GET', config.api + '/getcode?name=' + name + '&token=' + this.token, true)
 		xmlhttp.onreadystatechange = () => {
 			if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+				var data = JSON.parse(xmlhttp.responseText)
+				if (data["message"] == "Invalid Token")	{
+					alert("Token无效，请重新登录")
+					window.location.href = "/"
+				}
 				this.selectedItem = k
 				this.PythonFileSrc = JSON.parse(xmlhttp.responseText)['code']
 				this.PythonFileName = name

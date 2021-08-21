@@ -28,13 +28,21 @@ const children: Array<RouteConfig> = [
 			title: '实时日志'
 		}
 	},
+	{
+		path: 'login',
+		name: 'login',
+		component: () => import(/* webpackChunkName: "login" */ '@/views/login.vue'),
+		meta: {
+			title: '登录'
+		}
+	},
 
 ]
 
 const routes: Array<RouteConfig> = [
 	{
 		path: '/',
-		redirect: 'dashboard',
+		redirect: 'login',
 		component: () => import('@/layouts/default.vue'),
 		meta: { auth: true },
 		children: [...children]
